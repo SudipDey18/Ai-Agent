@@ -15,15 +15,15 @@ export default async function llm(req, res) {
                 "Authorization": `Bearer ${apiData.apiKey}`
             },
             body: JSON.stringify({
-                "model": "bytedance/seed-oss-36b-instruct",
+                "model": process.env.AI_MODEL || "bytedance/seed-oss-36b-instruct",
                 messages: [{
                     role: "systemprompt",
                     content: process.env.SYSTEM_PROMPT || "you are a ai agent reply eveyone politely"
                 }, ...req.body.query],
                 "temperature": 1.1,
                 "top_p": 0.95,
-                "max_tokens": 4096,
-                "thinking_budget": -1,
+                "max_tokens": 2048,
+                "thinking_budget": 1024,
                 "frequency_penalty": 0,
                 "presence_penalty": 0,
                 "stream": true,

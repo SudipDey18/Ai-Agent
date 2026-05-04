@@ -10,7 +10,8 @@ app.use(cors({
         if (!origin || urls.includes(origin)) {
             callback(null, origin);
         } else {
-            callback(new Error("Origin not allowed"));
+            console.log("Blocked origin:", origin);
+            callback(null, false);
         }
     }
 }));

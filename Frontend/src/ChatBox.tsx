@@ -1,7 +1,7 @@
 import Message from "./Message";
 import { useState } from "react";
 import UserChat from "./UserChat";
-import { ScaleLoader } from "react-spinners";
+import { ScaleLoader, SyncLoader } from "react-spinners";
 import type { message } from "./types/llm.types.js";
 import { askQuestion } from "./helper/LLM.helper.js";
 import toast from "react-hot-toast";
@@ -31,6 +31,7 @@ function ChatBox() {
                         return <Message markdown={item.content || markdown} key={index} isThinking={isThinking} />
                     }
                 })}
+                {isThinking === 1 && <SyncLoader color='#1DC22D' loading={isThinking === 1} size={5} speedMultiplier={0.8} className="mt-3" />}
             </div>
             <div className='mt-auto mb-2 flex items-center w-[90%] h-[15%]'>
                 <div className='w-full h-fit flex items-center bg-purple-200 border-2 rounded-2xl border-(--accent)'>
