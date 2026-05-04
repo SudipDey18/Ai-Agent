@@ -1,5 +1,5 @@
 import MarkdownPreview from '@uiw/react-markdown-preview';
-import '@uiw/react-markdown-preview/github.css';
+import '@uiw/react-markdown-preview/markdown.css';
 import { HashLoader } from 'react-spinners';
 
 function Message({ markdown, isThinking }: { markdown: string, isThinking: boolean }) {
@@ -11,8 +11,8 @@ function Message({ markdown, isThinking }: { markdown: string, isThinking: boole
     return (
         <MarkdownPreview
             source={markdown}
-            style={{ padding: 16, backgroundColor: 'transparent', color: 'black' }}
-            className='text-start bg-transparent max-w-full'
+            style={{ backgroundColor: 'transparent', color: 'black' }}
+            className='text-start bg-transparent max-w-full custom-markdown px-4 pb-4'
         />
     )
 }

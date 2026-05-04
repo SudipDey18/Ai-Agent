@@ -22,7 +22,7 @@ function ChatBox() {
     }
 
     return (
-        <div className='w-5/6 max-sm:w-[95%] h-[95%] flex flex-col items-center bg-(--code-bg) border border-(--accent) rounded-2xl mt-5 py-5 overflow-hidden'>
+        <div className='w-5/6 max-sm:w-[95%] lg:w-[70%] h-[95%] flex flex-col items-center bg-(--code-bg) border border-(--accent) rounded-2xl mt-5 py-5 overflow-hidden'>
             <div className='w-[90%] h-full flex flex-col overflow-y-auto hide-scrollbar '>
                 {messages?.map((item, index) => {
                     if (item.role === "user") {
