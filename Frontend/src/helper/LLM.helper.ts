@@ -3,7 +3,7 @@ import type { askQuestionParams, message } from "../types/llm.types";
 const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://192.168.1.21:3000";
 
 export async function askQuestion({ messages, query, setMessages, setIsLoading, setQuery, setIsThinking, setMarkdown }: askQuestionParams) {
-
+    setIsThinking(1);
     setIsLoading(true);
     let latestQuery: message[] = [...messages, {
         role: "user",
@@ -49,9 +49,9 @@ export async function askQuestion({ messages, query, setMessages, setIsLoading, 
                 const jsonStr = JSON.parse(line.trim());
 
                 if (jsonStr.thinking) {
-                    setIsThinking(true);
+                    setIsThinking(2);
                 } else {
-                    setIsThinking(false);
+                    setIsThinking(0);
                     finalText += jsonStr.data;
                     setMarkdown(finalText);
                 }
@@ -65,13 +65,13 @@ export async function askQuestion({ messages, query, setMessages, setIsLoading, 
         });
 
         setMarkdown("");
-        setIsThinking(false);
+        setIsThinking(0);
         setIsLoading(false);
         return { status: response.status };
     } catch (error) {
         console.log(error);
         setMarkdown("");
-        setIsThinking(false);
+        setIsThinking(0);
         setIsLoading(false);
         setMessages((prev: message[]) => {
             let messageArr = prev;

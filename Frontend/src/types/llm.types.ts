@@ -9,6 +9,6 @@ export type askQuestionParams = {
     setMessages: React.Dispatch<React.SetStateAction<message[]>>,
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
     setQuery: React.Dispatch<React.SetStateAction<string>>,
-    setIsThinking: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsThinking: React.Dispatch<React.SetStateAction<0 | 1 | 2>>,
     setMarkdown: React.Dispatch<React.SetStateAction<string>>
 }

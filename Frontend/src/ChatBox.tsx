@@ -10,11 +10,11 @@ function ChatBox() {
     const [markdown, setMarkdown] = useState<string>("");
     const [messages, setMessages] = useState<message[]>([]);
     const [query, setQuery] = useState<string>("");
-    const [isThinking, setIsThinking] = useState<boolean>(false)
+    const [isThinking, setIsThinking] = useState<0 | 1 | 2>(0)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const queryHandeler = async () => {
-        let resp:any = await askQuestion({ messages, setMarkdown, setMessages, setIsThinking, setIsLoading, query, setQuery });
+        let resp: any = await askQuestion({ messages, setMarkdown, setMessages, setIsThinking, setIsLoading, query, setQuery });
         if (resp?.error || resp?.status > 201) {
             console.log(resp);
             toast.error('Something went wrong!');
