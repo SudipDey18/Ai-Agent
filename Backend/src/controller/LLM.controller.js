@@ -1,70 +1,67 @@
 
 import dotenv from 'dotenv';
+import llm_api_call from '../helper/llm.api.js';
 dotenv.config();
-const apiData = {
-    apiKey: process.env.LLM_KEY || "",
-    baseURL: process.env.BASE_URL || 'https://integrate.api.nvidia.com/v1/chat/completions',
-}
 
 export default async function llm(req, res) {
+    // console.log(req.body);
+    let toolArgs = "";
+    let tool = "";
+
     try {
-        const response = await fetch(apiData.baseURL, {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${apiData.apiKey}`
-            },
-            body: JSON.stringify({
-                "model": process.env.AI_MODEL || "bytedance/seed-oss-36b-instruct",
-                messages: [{
-                    role: "systemprompt",
-                    content: process.env.SYSTEM_PROMPT || "you are a ai agent reply eveyone politely"
-                }, ...req.body.query],
-                "temperature": 1.1,
-                "top_p": 0.95,
-                "max_tokens": 2048,
-                "thinking_budget": 1024,
-                "frequency_penalty": 0,
-                "presence_penalty": 0,
-                "stream": true,
-            })
-        })
+        // do {
+            const response = await llm_api_call(req.body.query);
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = "";
+            let data;
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = "";
+            while (true) {
 
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            buffer += decoder.decode(value, { stream: true });
+                const llmResponse = await reader.read();
+                const { done, value } = llmResponse;
+                if (done) break;
+                buffer += decoder.decode(value, { stream: true });
 
-            const lines = buffer.split("\n");
-            buffer = lines.pop();
+                const lines = buffer.split("\n");
+                buffer = lines.pop();
 
-            for (const line of lines) {
-                if (!line.trim()) continue;
-                if (!line.startsWith("data:")) continue;
+                for (const line of lines) {
+                    if (!line.trim()) continue;
+                    if (!line.startsWith("data:")) continue;
 
-                const jsonStr = line.replace("data:", "").trim();
+                    const jsonStr = line.replace("data:", "").trim();
 
-                if (jsonStr === "[DONE]") continue;
+                    if (jsonStr === "[DONE]") continue;
 
-                const data = JSON.parse(jsonStr);
-                const chunk = data.choices[0]?.delta;
-                // console.log(chunk);
+                    data = JSON.parse(jsonStr);
+                    const chunk = data.choices[0]?.delta;
+                    console.log(data.choices[0]);
 
-                res.write(
-                    JSON.stringify({
-                        data: chunk?.content || "",
-                        thinking: !chunk?.content
-                    }) + "\n"
-                );
+                    if (chunk.tool_calls) {
+                        tool += chunk.tool_calls[0]?.function?.name || "";
+                        toolArgs += chunk.tool_calls[0]?.function?.arguments || ""
+                    }
+
+                    res.write(
+                        JSON.stringify({
+                            data: chunk?.content || "",
+                            thinking: !chunk?.content,
+                            toolCalling: (data.choices[0].finish_reason === "tool_calls")
+                        }) + "\n"
+                    );
+                }
             }
-        }
 
-        return res.end();
+            if (data.choices[0].finish_reason === "stop") {
+                return res.end();
+            } else {
+
+
+            }
+        // } while ()
     } catch (error) {
+        console.log(error);
         return res.status(404).json({ error: true, message: "Something went wrong" });
     }
 }
