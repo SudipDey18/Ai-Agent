@@ -44,7 +44,7 @@ export const weather_tool = {
                         "police_station": "String",
                         "pincode": "number"
                     },
-                    "description": 'The county and country and pincode, e.g. {"police_station": "patrasayer","place": "hat-krishnanagar","pincode":722206}',
+                    "description": 'The county and country and pincode, e.g. {"police_station": "patrasayer","place": "hat-krishnanagar","pincode":722206}. if anyone give only one address place name by default it is place.',
                     "required": ["place"]
                 }
             },

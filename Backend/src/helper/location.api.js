@@ -5,7 +5,10 @@ const api_key = process.env.LOCATION_API_KEY || "";
 
 async function location_api_call(data) {
     try {
-        let resp = await fetch(`https://geocode.maps.co/search?q=${data}&format=json&api_key=${api_key}`);
+        const apiString = `https://geocode.maps.co/search?q=${data}&format=json&api_key=${api_key}`;
+        console.log(apiString);
+
+        let resp = await fetch(apiString);
         if (!resp) {
             throw new Error("location api error.");
         }
@@ -17,6 +20,8 @@ async function location_api_call(data) {
 
 export async function get_lat_log(location) {
     let query_data;
+    // console.log(location);
+    
     try {
         if (!api_key) throw error("Api key not present");
         if (location?.pincode) {
@@ -28,6 +33,8 @@ export async function get_lat_log(location) {
         }
 
         let response = await location_api_call(query_data);
+        // console.log(response);
+        
         if (response.length <= 0) {
             if (location?.police_station) {
                 query_data = location.police_station;

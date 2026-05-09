@@ -1,7 +1,7 @@
 import { apiData, sum_tool, weather_tool } from "../../config.data.js";
 
 export default async function llm_api_call(queries) {
-    console.log(apiData);
+    // console.log(apiData);
     console.log(sum_tool ? "true" : "false");
     const response = await fetch(apiData.baseURL, {
         method: "post",
@@ -27,6 +27,6 @@ export default async function llm_api_call(queries) {
         })
     });
 
-    console.log(response);
+    // console.log(response);
     return response;
 }
